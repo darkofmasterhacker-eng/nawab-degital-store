@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Products | Nawab Digital Store</title>
+  <meta name="description" content="Browse all digital products, scripts, tools, and courses at Nawab Digital Store. Order online or message directly on WhatsApp +966 59 735 3083." />
+  <meta name="keywords" content="Nawab Digital Store Products, Buy Scripts, Software Licenses, Cybersecurity Courses, Nawab Zada Hacker" />
+  <meta name="author" content="Nawab Zada Hacker" />
+  <meta name="robots" content="index, follow" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body data-page="products">
+
+  <header class="navbar">
+    <div class="container nav-flex">
+      <a href="index.html" class="logo">NAWAB <span>DIGITAL STORE</span></a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="products.html" class="active">Products</a>
+        <a href="categories.html">Categories</a>
+        <a href="blogs.html">Blogs</a>
+        <a href="about.html">About</a>
+        <a href="profile.html">Profile</a>
+      </nav>
+      <div class="auth-buttons" id="authArea">
+        <button class="btn-outline" onclick="openAuthModal('login')">Login</button>
+        <button class="btn-primary" onclick="openAuthModal('register')">Sign Up</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="section container">
+    <div class="section-header">
+      <h1 class="section-title">Store <span>Products</span></h1>
+      <input type="text" id="searchInput" placeholder="Search products..." class="search-box" />
+    </div>
+
+    <div class="category-bar" id="categoryBar" style="margin-bottom:25px;">
+      <button class="cat-btn active" data-cat="All">All Products</button>
+      <button class="cat-btn" data-cat="Software & Tools">Software & Tools</button>
+      <button class="cat-btn" data-cat="Web Scripts">Web Scripts</button>
+      <button class="cat-btn" data-cat="Courses">Courses</button>
+      <button class="cat-btn" data-cat="Accounts & Keys">Accounts & Keys</button>
+    </div>
+
+    <div class="products-grid" id="productsGrid">
+      <p class="loading-text">Loading store products...</p>
+    </div>
+  </section>
+
+  <!-- Product Details & Order Modal -->
+  <div id="productModal" class="modal">
+    <div class="modal-content large-modal">
+      <span class="close-btn" onclick="closeModal('productModal')">&times;</span>
+      <div class="modal-product-grid">
+        <img id="modalImg" src="" alt="Product Image" />
+        <div class="modal-info">
+          <span id="modalCategory" class="badge">Category</span>
+          <h2 id="modalTitle">Product Title</h2>
+          <div class="price-box">
+            <span id="modalDiscountPrice" class="new-price">Rs. 0</span>
+            <span id="modalRealPrice" class="old-price">Rs. 0</span>
+          </div>
+          <p class="wa-contact-line">
+            <i class="fab fa-whatsapp"></i> WhatsApp: <strong>+966 59 735 3083</strong>
+            <a id="modalWaLink" href="https://wa.me/966597353083" target="_blank" rel="noopener" class="btn-wa-sm">Chat on WhatsApp</a>
+          </p>
+          <p id="modalDesc" class="full-desc"></p>
+
+          <hr class="divider" />
+          <h3>Place Your Order</h3>
+          <form id="orderForm">
+            <input type="hidden" id="orderProductId" />
+            <input type="hidden" id="orderProductName" />
+            <input type="hidden" id="orderProductPrice" />
+            <input type="text" id="custName" placeholder="Your Full Name" required />
+            <input type="text" id="custWhatsApp" placeholder="WhatsApp Number (e.g. 03001234567)" required />
+            <input type="text" id="custPaymentNote" placeholder="Payment Method / Transaction ID (JazzCash/EasyPaisa/Bank)" required />
+            <button type="submit" class="btn-primary full-width">Confirm Order Now</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth Modal -->
+  <div id="authModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('authModal')">&times;</span>
+      <h2 id="authTitle">Login to Store</h2>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Enter your Gmail" required />
+        <input type="password" id="loginPassword" placeholder="Enter Password" required />
+        <button type="submit" class="btn-primary full-width">Login</button>
+        <p class="switch-text">Don't have an account? <a href="#" onclick="openAuthModal('register')">Create Account</a></p>
+      </form>
+      <form id="registerForm" style="display:none;">
+        <input type="text" id="regName" placeholder="Full Name" required />
+        <input type="email" id="regEmail" placeholder="Enter Valid Gmail Address" required />
+        <input type="password" id="regPassword" placeholder="Create Password (min 6 chars)" required />
+        <button type="submit" class="btn-primary full-width">Create Account</button>
+        <p class="switch-text">Already have an account? <a href="#" onclick="openAuthModal('login')">Login</a></p>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container footer-content">
+      <p>&copy; 2026 <strong>Nawab Digital Store</strong>. All Rights Reserved. | WhatsApp: <strong>+966 59 735 3083</strong></p>
+      <p class="dev-credit">Developed & Secured by <span>Nawab Zada Hacker</span></p>
+    </div>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
