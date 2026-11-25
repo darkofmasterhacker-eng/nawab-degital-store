@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Hidden Admin Control | Nawab Digital Store</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- Admin Security Gate -->
+  <div id="adminLockScreen" class="lock-screen">
+    <div class="lock-box">
+      <h2><i class="fas fa-user-secret"></i> Restricted Access</h2>
+      <p>Enter Nawab Zada Admin Security Key</p>
+      <input type="password" id="adminPinInput" placeholder="Enter Secret PIN..." />
+      <button id="unlockAdminBtn" class="btn-primary full-width">Access Panel</button>
+      <p id="pinError" class="error-text"></p>
+    </div>
+  </div>
+
+  <!-- Main Admin Dashboard -->
+  <div id="adminDashboard" style="display:none;">
+    <header class="navbar">
+      <div class="container nav-flex">
+        <a href="index.html" class="logo">NAWAB <span>ADMIN PANEL</span></a>
+        <div class="admin-tabs">
+          <button class="tab-btn active" onclick="switchAdminTab('productsTab')">📦 Products</button>
+          <button class="tab-btn" onclick="switchAdminTab('ordersTab')">🛒 Orders</button>
+          <button class="tab-btn" onclick="switchAdminTab('visitorsTab')">🌐 Visitors & IPs</button>
+          <a href="index.html" class="btn-outline">View Store</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="container section">
+      
+      <!-- TAB 1: PRODUCTS MANAGEMENT -->
+      <div id="productsTab" class="admin-section">
+        <div class="admin-card">
+          <h2 id="formHeading">Add New Product</h2>
+          <form id="productForm" class="admin-form">
+            <input type="hidden" id="editProductId" />
+            
+            <div class="form-row">
+              <input type="text" id="prodName" placeholder="Product Name" required />
+              <select id="prodCategory" required>
+                <option value="Software & Tools">Software & Tools</option>
+                <option value="Web Scripts">Web Scripts</option>
+                <option value="Courses">Courses</option>
+                <option value="Accounts & Keys">Accounts & Keys</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <input type="number" id="prodRealPrice" placeholder="Real Price (e.g. 5000)" required />
+              <input type="number" id="prodDiscountPrice" placeholder="Discount Offer Price (e.g. 1999)" required />
+            </div>
+
+            <div class="form-row">
+              <input type="file" id="prodImageFile" accept="image/*" />
+              <input type="url" id="prodImageUrl" placeholder="OR Paste Image URL directly" />
+            </div>
+
+            <textarea id="prodDesc" rows="4" placeholder="Complete Product Description & Features..." required></textarea>
+            
+            <div class="form-actions">
+              <button type="submit" class="btn-primary" id="saveProdBtn">Upload Product</button>
+              <button type="button" class="btn-outline" id="cancelEditBtn" style="display:none;" onclick="resetProductForm()">Cancel Edit</button>
+            </div>
+          </form>
+        </div>
+
+        <h2 class="section-title">Manage Uploaded Products</h2>
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Real Price</th>
+                <th>Offer Price</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminProductsList"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 2: ORDERS MANAGEMENT -->
+      <div id="ordersTab" class="admin-section" style="display:none;">
+        <h2 class="section-title">Customer <span>Orders</span></h2>
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Customer Name</th>
+                <th>WhatsApp</th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Payment Info</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminOrdersList"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 3: VISITOR IP & USER LOGS -->
+      <div id="visitorsTab" class="admin-section" style="display:none;">
+        <div class="section-header">
+          <h2 class="section-title">Live Visitor <span>IP & User Logs</span></h2>
+          <button class="btn-outline" id="clearLogsBtn">Clear Logs</button>
+        </div>
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>IP Address</th>
+                <th>User Name / Email</th>
+                <th>Location</th>
+                <th>Device / Browser</th>
+              </tr>
+            </thead>
+            <tbody id="adminVisitorsList"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+
+    <footer>
+      <div class="container footer-content">
+        <p>Nawab Digital Store Admin Control</p>
+        <p class="dev-credit">Developer: <span>Nawab Zada Hacker</span></p>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
