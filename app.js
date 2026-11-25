@@ -29,22 +29,68 @@ function getWhatsAppProductUrl(productName, price) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
 }
 
-// 1. Track Visitor IP & User Info automatically
-async function logVisitor(userObj = null) {
+// Fetch Real IP + Location with reliable fallbacks
+async function getClientIpInfo() {
+  try {
+    const res = await fetch("https://ipwho.is/");
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.success !== false && data.ip) {
+        return {
+          ip: data.ip,
+          city: data.city || "Unknown",
+          country: data.country || "Unknown"
+        };
+      }
+    }
+  } catch (_) {}
+
   try {
     const res = await fetch("https://ipapi.co/json/");
-    const ipData = await res.json();
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.ip) {
+        return {
+          ip: data.ip,
+          city: data.city || "Unknown",
+          country: data.country_name || "Unknown"
+        };
+      }
+    }
+  } catch (_) {}
+
+  try {
+    const res = await fetch("https://api.ipify.org?format=json");
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.ip) {
+        return {
+          ip: data.ip,
+          city: "Unknown",
+          country: "Unknown"
+        };
+      }
+    }
+  } catch (_) {}
+
+  return { ip: "Unknown IP", city: "Unknown", country: "Unknown" };
+}
+
+// 1. Track Visitor IP, Location & User Info automatically
+async function logVisitor(userObj = null) {
+  try {
+    const ipInfo = await getClientIpInfo();
 
     await addDoc(collection(db, "visitors"), {
-      ip: ipData.ip || "Unknown IP",
-      city: ipData.city || "Unknown",
-      country: ipData.country_name || "Unknown",
+      ip: ipInfo.ip,
+      city: ipInfo.city,
+      country: ipInfo.country,
       userName: userObj ? `${userObj.displayName || "User"} (${userObj.email})` : "Guest Visitor",
       userAgent: navigator.userAgent.slice(0, 80),
       timestamp: serverTimestamp()
     });
   } catch (err) {
-    console.warn("IP tracking skipped:", err);
+    console.warn("Visitor log error:", err);
   }
 }
 
@@ -108,7 +154,12 @@ onAuthStateChanged(auth, (user) => {
       `;
       document.getElementById("logoutBtn").addEventListener("click", () => signOut(auth));
     }
-    logVisitor(user);
+
+    const userSessionKey = `userLogged_${user.uid}`;
+    if (!sessionStorage.getItem(userSessionKey)) {
+      logVisitor(user);
+      sessionStorage.setItem(userSessionKey, "true");
+    }
 
     const notLoggedBox = document.getElementById("notLoggedInBox");
     const profileBox = document.getElementById("profileDetailsBox");
@@ -149,7 +200,7 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// 4. Create Account Directly with Firebase Auth
+// 4. Create Account Directly with Firebase Auth + Save to Firestore `users`
 const registerForm = document.getElementById("registerForm");
 if (registerForm) {
   registerForm.addEventListener("submit", async (e) => {
@@ -166,6 +217,19 @@ if (registerForm) {
     try {
       const userCred = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCred.user, { displayName: name });
+
+      const ipInfo = await getClientIpInfo();
+      await addDoc(collection(db, "users"), {
+        uid: userCred.user.uid,
+        name,
+        email,
+        ip: ipInfo.ip,
+        city: ipInfo.city,
+        country: ipInfo.country,
+        createdAt: serverTimestamp()
+      });
+
+      sessionStorage.setItem(`userLogged_${userCred.user.uid}`, "true");
       registerForm.reset();
       alert("✅ Account created! Welcome to Nawab Digital Store.");
       closeModal("authModal");
@@ -299,18 +363,21 @@ window.openProductDetails = (id) => {
   document.getElementById("productModal").style.display = "block";
 };
 
-// 9. Submit Order to Firebase
+// 9. Submit Order to Firebase (with Customer IP)
 const orderForm = document.getElementById("orderForm");
 if (orderForm) {
   orderForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     try {
+      const ipInfo = await getClientIpInfo();
+
       await addDoc(collection(db, "orders"), {
         productId: document.getElementById("orderProductId").value,
         productName: document.getElementById("orderProductName").value,
         price: document.getElementById("orderProductPrice").value,
         customerName: document.getElementById("custName").value.trim(),
         customerEmail: currentUser ? currentUser.email : "Guest",
+        customerIp: ipInfo.ip,
         whatsapp: document.getElementById("custWhatsApp").value.trim(),
         paymentInfo: document.getElementById("custPaymentNote").value.trim(),
         status: "Pending",
