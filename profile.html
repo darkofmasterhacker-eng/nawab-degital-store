@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile & Orders | Nawab Digital Store</title>
+  <meta name="description" content="View your account profile, Gmail, and order history at Nawab Digital Store." />
+  <meta name="robots" content="noindex, follow" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body data-page="profile">
+
+  <header class="navbar">
+    <div class="container nav-flex">
+      <a href="index.html" class="logo">NAWAB <span>DIGITAL STORE</span></a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="categories.html">Categories</a>
+        <a href="blogs.html">Blogs</a>
+        <a href="about.html">About</a>
+        <a href="profile.html" class="active">Profile</a>
+      </nav>
+      <div class="auth-buttons" id="authArea">
+        <button class="btn-outline" onclick="openAuthModal('login')">Login</button>
+        <button class="btn-primary" onclick="openAuthModal('register')">Sign Up</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="section container">
+    <h1 class="section-title">User <span>Profile</span></h1>
+
+    <div id="notLoggedInBox" class="about-box">
+      <p>Please login or create an account to view your Gmail, profile details, and <strong>My Orders</strong>.</p>
+      <div style="margin-top:15px; display:flex; gap:10px;">
+        <button class="btn-outline" onclick="openAuthModal('login')">Login</button>
+        <button class="btn-primary" onclick="openAuthModal('register')">Create Account</button>
+      </div>
+    </div>
+
+    <div id="profileDetailsBox" class="about-box" style="display:none; margin-bottom:35px;">
+      <h2>Account Information</h2>
+      <p style="margin-top:10px;"><strong>Name:</strong> <span id="profileName">-</span></p>
+      <p style="margin-top:6px;"><strong>Gmail:</strong> <span id="profileEmail">-</span></p>
+      <p style="margin-top:6px;"><strong>Store Support WhatsApp:</strong> +966 59 735 3083</p>
+    </div>
+
+    <div id="myOrdersSection" style="display:none;">
+      <h2 class="section-title">My <span>Orders</span></h2>
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Product</th>
+              <th>Price</th>
+              <th>WhatsApp</th>
+              <th>Payment Info</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="myOrdersList">
+            <tr><td colspan="6">Loading your orders...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Auth Modal -->
+  <div id="authModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('authModal')">&times;</span>
+      <h2 id="authTitle">Login to Store</h2>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Enter your Gmail" required />
+        <input type="password" id="loginPassword" placeholder="Enter Password" required />
+        <button type="submit" class="btn-primary full-width">Login</button>
+        <p class="switch-text">Don't have an account? <a href="#" onclick="openAuthModal('register')">Create Account</a></p>
+      </form>
+      <form id="registerForm" style="display:none;">
+        <input type="text" id="regName" placeholder="Full Name" required />
+        <input type="email" id="regEmail" placeholder="Enter Valid Gmail Address" required />
+        <input type="password" id="regPassword" placeholder="Create Password (min 6 chars)" required />
+        <button type="submit" class="btn-primary full-width">Create Account</button>
+        <p class="switch-text">Already have an account? <a href="#" onclick="openAuthModal('login')">Login</a></p>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container footer-content">
+      <p>&copy; 2026 <strong>Nawab Digital Store</strong>. All Rights Reserved. | WhatsApp: <strong>+966 59 735 3083</strong></p>
+      <p class="dev-credit">Developed & Secured by <span>Nawab Zada Hacker</span></p>
+    </div>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
