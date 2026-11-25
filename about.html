@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us | Nawab Digital Store</title>
+  <meta name="description" content="Learn about Nawab Digital Store, founded and engineered by Nawab Zada Hacker. Direct WhatsApp support: +966 59 735 3083." />
+  <meta name="keywords" content="About Nawab Digital Store, Nawab Zada Hacker, Digital Marketplace" />
+  <meta name="author" content="Nawab Zada Hacker" />
+  <meta name="robots" content="index, follow" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body data-page="about">
+
+  <header class="navbar">
+    <div class="container nav-flex">
+      <a href="index.html" class="logo">NAWAB <span>DIGITAL STORE</span></a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="categories.html">Categories</a>
+        <a href="blogs.html">Blogs</a>
+        <a href="about.html" class="active">About</a>
+        <a href="profile.html">Profile</a>
+      </nav>
+      <div class="auth-buttons" id="authArea">
+        <button class="btn-outline" onclick="openAuthModal('login')">Login</button>
+        <button class="btn-primary" onclick="openAuthModal('register')">Sign Up</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="section container">
+    <div class="about-box">
+      <h1 class="section-title">About <span>Nawab Digital Store</span></h1>
+      <p>
+        <strong>Nawab Digital Store</strong> is a next-generation digital marketplace founded and engineered by <strong>Nawab Zada Hacker</strong>.
+        Our mission is to provide developers, students, and digital entrepreneurs with verified tools, source codes, and educational resources with fast support.
+      </p>
+      <p style="margin-top:15px;">
+        Need direct assistance or custom orders? Reach out on WhatsApp at <strong>+966 59 735 3083</strong>.
+      </p>
+      <div style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap;">
+        <a href="products.html" class="btn-primary">Browse Products</a>
+        <a href="https://wa.me/966597353083?text=Assalam-o-Alaikum%20Nawab%20Digital%20Store" target="_blank" rel="noopener" class="btn-wa">
+          <i class="fab fa-whatsapp"></i> Message on WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Auth Modal -->
+  <div id="authModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('authModal')">&times;</span>
+      <h2 id="authTitle">Login to Store</h2>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Enter your Gmail" required />
+        <input type="password" id="loginPassword" placeholder="Enter Password" required />
+        <button type="submit" class="btn-primary full-width">Login</button>
+        <p class="switch-text">Don't have an account? <a href="#" onclick="openAuthModal('register')">Create Account</a></p>
+      </form>
+      <form id="registerForm" style="display:none;">
+        <input type="text" id="regName" placeholder="Full Name" required />
+        <input type="email" id="regEmail" placeholder="Enter Valid Gmail Address" required />
+        <input type="password" id="regPassword" placeholder="Create Password (min 6 chars)" required />
+        <button type="submit" class="btn-primary full-width">Create Account</button>
+        <p class="switch-text">Already have an account? <a href="#" onclick="openAuthModal('login')">Login</a></p>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container footer-content">
+      <p>&copy; 2026 <strong>Nawab Digital Store</strong>. All Rights Reserved. | WhatsApp: <strong>+966 59 735 3083</strong></p>
+      <p class="dev-credit">Developed & Secured by <span>Nawab Zada Hacker</span></p>
+    </div>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
