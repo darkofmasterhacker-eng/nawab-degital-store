@@ -32,8 +32,6 @@
 
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <!-- EmailJS SDK for Gmail OTP -->
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -152,7 +150,7 @@
     </div>
   </div>
 
-  <!-- Auth Modal (Login + Gmail OTP Signup) -->
+  <!-- Auth Modal (Login + Create Account) -->
   <div id="authModal" class="modal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal('authModal')">&times;</span>
@@ -166,19 +164,12 @@
         <p class="switch-text">Don't have an account? <a href="#" onclick="openAuthModal('register')">Create Account</a></p>
       </form>
 
+      <!-- Register Form -->
       <form id="registerForm" style="display:none;">
-        <div id="step1Fields">
-          <input type="text" id="regName" placeholder="Full Name" required />
-          <input type="email" id="regEmail" placeholder="Enter Valid Gmail Address" required />
-          <input type="password" id="regPassword" placeholder="Create Password (min 6 chars)" required />
-          <button type="button" id="sendOtpBtn" class="btn-primary full-width">Send OTP to Gmail</button>
-        </div>
-        
-        <div id="step2Otp" style="display:none;">
-          <p class="otp-info">We sent a 6-digit OTP to your Gmail. Enter it below:</p>
-          <input type="text" id="otpInput" placeholder="Enter 6-Digit OTP" maxlength="6" />
-          <button type="submit" class="btn-primary full-width">Verify OTP & Create Account</button>
-        </div>
+        <input type="text" id="regName" placeholder="Full Name" required />
+        <input type="email" id="regEmail" placeholder="Enter Valid Gmail Address" required />
+        <input type="password" id="regPassword" placeholder="Create Password (min 6 chars)" required />
+        <button type="submit" class="btn-primary full-width">Create Account</button>
         <p class="switch-text">Already have an account? <a href="#" onclick="openAuthModal('login')">Login</a></p>
       </form>
     </div>
