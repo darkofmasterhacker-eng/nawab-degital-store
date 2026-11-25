@@ -17,4 +17,4 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-export const ADMIN_SECRET_PIN = "NAWAB@2026";
+export const ADMIN_SECRET_PIN = "512@nawab@#%%%>>...///@Hacker";
