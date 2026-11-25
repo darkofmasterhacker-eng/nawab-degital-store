@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /admin.html
+Disallow: /admin_78363636.html
 
 Sitemap: https://nawab-digital-store.vercel.app/sitemap.xml
