@@ -3,26 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <!-- Google Ranking SEO Meta Tags -->
-  <title>Nawab Digital Store | Premium Digital Products, Tools & Courses</title>
-  <meta name="description" content="Nawab Digital Store - Buy premium software, scripts, cybersecurity courses, and digital assets at discounted prices. Developed by Nawab Zada Hacker." />
-  <meta name="keywords" content="Nawab Digital Store, Digital Products Pakistan, Software Store, Nawab Zada Hacker, Ethical Hacking Tools, Web Scripts" />
+
+  <title>Nawab Digital Store | Home — Premium Digital Products & Categories</title>
+  <meta name="description" content="Nawab Digital Store official home page. Browse all categories, digital products, scripts, software tools, and courses. Developed by Nawab Zada Hacker." />
+  <meta name="keywords" content="Nawab Digital Store, Digital Products, Web Scripts, Software Tools, Courses, Nawab Zada Hacker" />
   <meta name="author" content="Nawab Zada Hacker" />
   <meta name="robots" content="index, follow" />
-  
-  <!-- Open Graph for Social Sharing -->
-  <meta property="og:title" content="Nawab Digital Store - Official Marketplace" />
-  <meta property="og:description" content="Explore top-rated digital tools, scripts, and courses with instant delivery." />
+  <link rel="canonical" href="https://nawab-digital-store.vercel.app/index.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Nawab Digital Store — Home" />
+  <meta property="og:description" content="Explore all products and categories at Nawab Digital Store." />
   <meta property="og:type" content="website" />
 
-  <!-- Schema.org JSON-LD for Google Rich Snippets -->
+  <!-- Schema.org JSON-LD -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Store",
     "name": "Nawab Digital Store",
     "description": "Premium Digital Products, Scripts, and Tech Courses Store",
+    "telephone": "+966597353083",
     "founder": {
       "@type": "Person",
       "name": "Nawab Zada Hacker"
@@ -33,17 +34,18 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
-<body>
+<body data-page="home">
 
-  <!-- Navbar -->
   <header class="navbar">
     <div class="container nav-flex">
-      <a href="#" class="logo">NAWAB <span>DIGITAL STORE</span></a>
+      <a href="index.html" class="logo">NAWAB <span>DIGITAL STORE</span></a>
       <nav class="nav-links">
-        <a href="#products">Products</a>
-        <a href="#categories">Categories</a>
-        <a href="#blogs">Blogs</a>
-        <a href="#about">About</a>
+        <a href="index.html" class="active">Home</a>
+        <a href="products.html">Products</a>
+        <a href="categories.html">Categories</a>
+        <a href="blogs.html">Blogs</a>
+        <a href="about.html">About</a>
+        <a href="profile.html">Profile</a>
       </nav>
       <div class="auth-buttons" id="authArea">
         <button class="btn-outline" onclick="openAuthModal('login')">Login</button>
@@ -52,22 +54,23 @@
     </div>
   </header>
 
-  <!-- Hero Section -->
   <section class="hero">
     <div class="container">
-      <span class="badge">🔥 Trusted Digital Marketplace</span>
+      <span class="badge">Trusted Digital Marketplace</span>
       <h1>Upgrade Your Digital Arsenal with <span>Nawab Digital Store</span></h1>
-      <p>Premium Web Scripts, Cybersecurity Tools, Software Licenses & Exclusive Courses at unbeatable discounts.</p>
+      <p>Premium Web Scripts, Cybersecurity Tools, Software Licenses & Exclusive Courses with direct WhatsApp support (<strong>+966 59 735 3083</strong>).</p>
       <div class="hero-btns">
-        <a href="#products" class="btn-primary">Explore Store</a>
-        <a href="#blogs" class="btn-outline">Read Tech Blogs</a>
+        <a href="products.html" class="btn-primary">All Products</a>
+        <a href="categories.html" class="btn-outline">All Categories</a>
       </div>
     </div>
   </section>
 
-  <!-- Categories Filter -->
   <section id="categories" class="section container">
-    <h2 class="section-title">Browse <span>Categories</span></h2>
+    <div class="section-header">
+      <h2 class="section-title">All <span>Categories</span></h2>
+      <a href="categories.html" class="btn-outline">Open Categories Page &rarr;</a>
+    </div>
     <div class="category-bar" id="categoryBar">
       <button class="cat-btn active" data-cat="All">All Products</button>
       <button class="cat-btn" data-cat="Software & Tools">Software & Tools</button>
@@ -77,46 +80,17 @@
     </div>
   </section>
 
-  <!-- Products Dashboard -->
   <section id="products" class="section container">
     <div class="section-header">
-      <h2 class="section-title">Featured <span>Products</span></h2>
-      <input type="text" id="searchInput" placeholder="Search products..." class="search-box" />
+      <h2 class="section-title">All <span>Products</span></h2>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <input type="text" id="searchInput" placeholder="Search products..." class="search-box" />
+        <a href="products.html" class="btn-outline">Full Products Page &rarr;</a>
+      </div>
     </div>
     <div class="products-grid" id="productsGrid">
       <p class="loading-text">Loading store items...</p>
     </div>
-  </section>
-
-  <!-- Blogs Section (Great for Google SEO) -->
-  <section id="blogs" class="section container">
-    <h2 class="section-title">Latest Tech & Security <span>Blogs</span></h2>
-    <div class="blogs-grid">
-      <article class="blog-card">
-        <h3>Top 5 Cybersecurity Practices in 2026</h3>
-        <p>Learn how to secure your web apps, Firebase databases, and personal accounts from modern phishing attacks.</p>
-        <span class="blog-meta">By Nawab Zada Hacker • 5 min read</span>
-      </article>
-      <article class="blog-card">
-        <h3>Why Digital Assets Are the Future of Online Business</h3>
-        <p>Discover how ready-made scripts and automation tools save developers hundreds of coding hours.</p>
-        <span class="blog-meta">By Nawab Zada Hacker • 4 min read</span>
-      </article>
-      <article class="blog-card">
-        <h3>How to Deploy Full-Stack Apps on Vercel for Free</h3>
-        <p>A complete step-by-step guide to hosting fast, SEO-friendly websites with GitHub and Vercel.</p>
-        <span class="blog-meta">By Nawab Zada Hacker • 6 min read</span>
-      </article>
-    </div>
-  </section>
-
-  <!-- About Section -->
-  <section id="about" class="section container about-box">
-    <h2 class="section-title">About <span>Nawab Digital Store</span></h2>
-    <p>
-      <strong>Nawab Digital Store</strong> is a next-generation digital marketplace founded and engineered by <strong>Nawab Zada Hacker</strong>. 
-      Our mission is to provide developers, students, and digital entrepreneurs with verified tools, source codes, and educational resources with instant support.
-    </p>
   </section>
 
   <!-- Product "See More" & Order Modal -->
@@ -132,8 +106,12 @@
             <span id="modalDiscountPrice" class="new-price">Rs. 0</span>
             <span id="modalRealPrice" class="old-price">Rs. 0</span>
           </div>
+          <p class="wa-contact-line">
+            <i class="fab fa-whatsapp"></i> WhatsApp: <strong>+966 59 735 3083</strong>
+            <a id="modalWaLink" href="https://wa.me/966597353083" target="_blank" rel="noopener" class="btn-wa-sm">Chat on WhatsApp</a>
+          </p>
           <p id="modalDesc" class="full-desc"></p>
-          
+
           <hr class="divider" />
           <h3>Place Your Order</h3>
           <form id="orderForm">
@@ -155,8 +133,7 @@
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal('authModal')">&times;</span>
       <h2 id="authTitle">Login to Store</h2>
-      
-      <!-- Login Form -->
+
       <form id="loginForm">
         <input type="email" id="loginEmail" placeholder="Enter your Gmail" required />
         <input type="password" id="loginPassword" placeholder="Enter Password" required />
@@ -164,7 +141,6 @@
         <p class="switch-text">Don't have an account? <a href="#" onclick="openAuthModal('register')">Create Account</a></p>
       </form>
 
-      <!-- Register Form -->
       <form id="registerForm" style="display:none;">
         <input type="text" id="regName" placeholder="Full Name" required />
         <input type="email" id="regEmail" placeholder="Enter Valid Gmail Address" required />
@@ -178,8 +154,8 @@
   <!-- Footer -->
   <footer>
     <div class="container footer-content">
-      <p>&copy; 2026 <strong>Nawab Digital Store</strong>. All Rights Reserved.</p>
-      <p class="dev-credit">Developed & Secured by <span>Nawab Zada Hacker</span></p>
+      <p>&copy; 2026 <strong>Nawab Digital Store</strong>. All Rights Reserved. | WhatsApp: <strong>+966 59 735 3083</strong></p>
+      <p class="dev-credit">Developed  by <span>Nawab Zada Hacker</span></p>
     </div>
   </footer>
 
