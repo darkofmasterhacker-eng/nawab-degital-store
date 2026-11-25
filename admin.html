@@ -27,23 +27,24 @@
       <div class="container nav-flex">
         <a href="index.html" class="logo">NAWAB <span>ADMIN PANEL</span></a>
         <div class="admin-tabs">
-          <button class="tab-btn active" onclick="switchAdminTab('productsTab')">📦 Products</button>
-          <button class="tab-btn" onclick="switchAdminTab('ordersTab')">🛒 Orders</button>
-          <button class="tab-btn" onclick="switchAdminTab('visitorsTab')">🌐 Visitors & IPs</button>
+          <button class="tab-btn active" data-tab="productsTab" onclick="switchAdminTab('productsTab', this)">📦 Products</button>
+          <button class="tab-btn" data-tab="ordersTab" onclick="switchAdminTab('ordersTab', this)">🛒 Orders</button>
+          <button class="tab-btn" data-tab="visitorsTab" onclick="switchAdminTab('visitorsTab', this)">🌐 Visitors (<span id="visitorCount">0</span>)</button>
+          <button class="tab-btn" data-tab="usersTab" onclick="switchAdminTab('usersTab', this)">👤 Registered Users (<span id="userCount">0</span>)</button>
           <a href="index.html" class="btn-outline">View Store</a>
         </div>
       </div>
     </header>
 
     <main class="container section">
-      
+
       <!-- TAB 1: PRODUCTS MANAGEMENT -->
       <div id="productsTab" class="admin-section">
         <div class="admin-card">
           <h2 id="formHeading">Add New Product</h2>
           <form id="productForm" class="admin-form">
             <input type="hidden" id="editProductId" />
-            
+
             <div class="form-row">
               <input type="text" id="prodName" placeholder="Product Name" required />
               <select id="prodCategory" required>
@@ -65,7 +66,7 @@
             </div>
 
             <textarea id="prodDesc" rows="4" placeholder="Complete Product Description & Features..." required></textarea>
-            
+
             <div class="form-actions">
               <button type="submit" class="btn-primary" id="saveProdBtn">Upload Product</button>
               <button type="button" class="btn-outline" id="cancelEditBtn" style="display:none;" onclick="resetProductForm()">Cancel Edit</button>
@@ -91,18 +92,19 @@
         </div>
       </div>
 
-      <!-- TAB 2: ORDERS MANAGEMENT -->
+      <!-- TAB 2: ORDERS MANAGEMENT (WITH USER IP ADDRESS) -->
       <div id="ordersTab" class="admin-section" style="display:none;">
         <h2 class="section-title">Customer <span>Orders</span></h2>
         <div class="table-responsive">
           <table class="admin-table">
             <thead>
               <tr>
-                <th>Date</th>
+                <th>Date & Time</th>
                 <th>Customer Name</th>
                 <th>WhatsApp</th>
                 <th>Product</th>
                 <th>Price</th>
+                <th>IP Address</th>
                 <th>Payment Info</th>
                 <th>Status</th>
                 <th>Action</th>
@@ -113,24 +115,45 @@
         </div>
       </div>
 
-      <!-- TAB 3: VISITOR IP & USER LOGS -->
+      <!-- TAB 3: VISITORS IP, DATE & TIME LOGS -->
       <div id="visitorsTab" class="admin-section" style="display:none;">
         <div class="section-header">
-          <h2 class="section-title">Live Visitor <span>IP & User Logs</span></h2>
+          <h2 class="section-title">Site <span>Visitors</span> (Total: <span id="visitorTotalTitle">0</span>)</h2>
           <button class="btn-outline" id="clearLogsBtn">Clear Logs</button>
         </div>
         <div class="table-responsive">
           <table class="admin-table">
             <thead>
               <tr>
-                <th>Time</th>
-                <th>IP Address</th>
-                <th>User Name / Email</th>
+                <th>Date & Time</th>
+                <th>Real IP Address</th>
+                <th>User / Guest</th>
                 <th>Location</th>
                 <th>Device / Browser</th>
               </tr>
             </thead>
             <tbody id="adminVisitorsList"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 4: REGISTERED USERS (NAME, GMAIL, REAL IP, DATE & TIME) -->
+      <div id="usersTab" class="admin-section" style="display:none;">
+        <div class="section-header">
+          <h2 class="section-title">Registered <span>Users</span> (Total: <span id="userTotalTitle">0</span>)</h2>
+        </div>
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Date & Time</th>
+                <th>User Name</th>
+                <th>Gmail</th>
+                <th>Real IP Address</th>
+                <th>Location</th>
+              </tr>
+            </thead>
+            <tbody id="adminUsersList"></tbody>
           </table>
         </div>
       </div>
