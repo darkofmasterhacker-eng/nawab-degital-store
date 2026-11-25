@@ -1,4 +1,3 @@
-// app.js
 import { auth, db } from "./firebase-config.js";
 import {
   createUserWithEmailAndPassword,
@@ -29,7 +28,6 @@ function getWhatsAppProductUrl(productName, price) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
 }
 
-// Fetch Real IP + Location with reliable fallbacks
 async function getClientIpInfo() {
   try {
     const res = await fetch("https://ipwho.is/");
@@ -76,7 +74,6 @@ async function getClientIpInfo() {
   return { ip: "Unknown IP", city: "Unknown", country: "Unknown" };
 }
 
-// 1. Track Visitor IP, Location & User Info automatically
 async function logVisitor(userObj = null) {
   try {
     const ipInfo = await getClientIpInfo();
@@ -94,7 +91,6 @@ async function logVisitor(userObj = null) {
   }
 }
 
-// 2. Load Logged-in User's Orders on Profile Page
 function loadUserOrders(email) {
   const tbody = document.getElementById("myOrdersList");
   if (!tbody || !email) return;
@@ -141,7 +137,6 @@ function loadUserOrders(email) {
   );
 }
 
-// 3. Auth State Listener
 onAuthStateChanged(auth, (user) => {
   currentUser = user;
   const authArea = document.getElementById("authArea");
@@ -307,7 +302,6 @@ function renderProducts(productsList) {
     .join("");
 }
 
-// 7. Category Filter & Search
 document.querySelectorAll(".cat-btn").forEach((btn) => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".cat-btn").forEach((b) => b.classList.remove("active"));
@@ -335,7 +329,6 @@ if (searchInput) {
   });
 }
 
-// 8. Open Product Details Modal
 window.openProductDetails = (id) => {
   const prod = allProducts.find((p) => p.id === id);
   if (!prod) return;
@@ -363,7 +356,6 @@ window.openProductDetails = (id) => {
   document.getElementById("productModal").style.display = "block";
 };
 
-// 9. Submit Order to Firebase (with Customer IP)
 const orderForm = document.getElementById("orderForm");
 if (orderForm) {
   orderForm.addEventListener("submit", async (e) => {
@@ -393,7 +385,6 @@ if (orderForm) {
   });
 }
 
-// Modal Helpers
 window.openAuthModal = (type) => {
   const modal = document.getElementById("authModal");
   if (!modal) return;
