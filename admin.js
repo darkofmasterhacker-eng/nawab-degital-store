@@ -1,4 +1,3 @@
-// admin.js
 import { db, ADMIN_SECRET_PIN } from "./firebase-config.js";
 import {
   collection,
@@ -13,7 +12,6 @@ import {
   getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// 1. Admin Lock Screen Verification
 document.getElementById("unlockAdminBtn").addEventListener("click", () => {
   const pin = document.getElementById("adminPinInput").value;
   if (pin === ADMIN_SECRET_PIN) {
@@ -25,7 +23,6 @@ document.getElementById("unlockAdminBtn").addEventListener("click", () => {
   }
 });
 
-// Switch Admin Tabs
 window.switchAdminTab = (tabId, btnEl = null) => {
   document.querySelectorAll(".admin-section").forEach((sec) => (sec.style.display = "none"));
   document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"));
@@ -39,7 +36,6 @@ window.switchAdminTab = (tabId, btnEl = null) => {
   }
 };
 
-// Convert Local Image File to Compressed Base64
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -65,7 +61,6 @@ function fileToBase64(file) {
 let productsCache = [];
 
 function initAdminData() {
-  // Load Products
   onSnapshot(query(collection(db, "products"), orderBy("createdAt", "desc")), (snap) => {
     productsCache = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
     const tbody = document.getElementById("adminProductsList");
@@ -88,7 +83,6 @@ function initAdminData() {
       .join("");
   });
 
-  // Load Orders (Including User IP Address)
   onSnapshot(query(collection(db, "orders"), orderBy("createdAt", "desc")), (snap) => {
     const tbody = document.getElementById("adminOrdersList");
     if (snap.empty) {
@@ -119,7 +113,6 @@ function initAdminData() {
       .join("");
   });
 
-  // Load Visitor IPs, Date & Time + Total Count
   onSnapshot(query(collection(db, "visitors"), orderBy("timestamp", "desc")), (snap) => {
     const total = snap.size;
     const countEl = document.getElementById("visitorCount");
@@ -149,7 +142,6 @@ function initAdminData() {
       .join("");
   });
 
-  // Load Registered Users (Name, Gmail, Real IP, Date & Time) + Total Count
   onSnapshot(query(collection(db, "users"), orderBy("createdAt", "desc")), (snap) => {
     const total = snap.size;
     const countEl = document.getElementById("userCount");
@@ -180,7 +172,6 @@ function initAdminData() {
   });
 }
 
-// Add or Edit Product Submit
 document.getElementById("productForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const editId = document.getElementById("editProductId").value;
@@ -219,7 +210,6 @@ document.getElementById("productForm").addEventListener("submit", async (e) => {
   }
 });
 
-// Edit Product Populate
 window.editProduct = (id) => {
   const prod = productsCache.find((p) => p.id === id);
   if (!prod) return;
