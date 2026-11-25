@@ -17,10 +17,4 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-export const EMAILJS_CONFIG = {
-  PUBLIC_KEY: "qh5glFitkn-IVS6dM",
-  SERVICE_ID: "service_3oohrac",
-  TEMPLATE_ID: "m7d9oix" // Variables: {{to_email}}, {{to_name}}, {{otp_code}}
-};
-
 export const ADMIN_SECRET_PIN = "NAWAB@2026";
