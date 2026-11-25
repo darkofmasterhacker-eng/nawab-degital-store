@@ -1,5 +1,5 @@
 // app.js
-import { auth, db, EMAILJS_CONFIG } from "./firebase-config.js";
+import { auth, db } from "./firebase-config.js";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -16,11 +16,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Initialize EmailJS
-emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
-
 let allProducts = [];
-let generatedOTP = null;
 let currentUser = null;
 
 // 1. Track Visitor IP & User Info automatically
@@ -65,8 +61,9 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// 3. Send Gmail OTP for Registration
-document.getElementById("sendOtpBtn").addEventListener("click", async () => {
+// 3. Create Account Directly with Firebase Auth
+document.getElementById("registerForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
   const name = document.getElementById("regName").value.trim();
   const email = document.getElementById("regEmail").value.trim();
   const password = document.getElementById("regPassword").value;
@@ -76,54 +73,18 @@ document.getElementById("sendOtpBtn").addEventListener("click", async () => {
     return;
   }
 
-  // Generate 6-digit OTP
-  generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-  const btn = document.getElementById("sendOtpBtn");
-  btn.innerText = "Sending OTP...";
-  btn.disabled = true;
-
-  try {
-    await emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, {
-      to_name: name,
-      to_email: email,
-      otp_code: generatedOTP
-    });
-
-    alert(`OTP has been sent to ${email}. Please check Inbox or Spam.`);
-    document.getElementById("step1Fields").style.display = "none";
-    document.getElementById("step2Otp").style.display = "block";
-  } catch (error) {
-    console.error("EmailJS Error:", error);
-    alert("Failed to send OTP. Check EmailJS keys in firebase-config.js");
-    btn.innerText = "Send OTP to Gmail";
-    btn.disabled = false;
-  }
-});
-
-// 4. Verify OTP & Create Firebase User
-document.getElementById("registerForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const enteredOtp = document.getElementById("otpInput").value.trim();
-  const name = document.getElementById("regName").value.trim();
-  const email = document.getElementById("regEmail").value.trim();
-  const password = document.getElementById("regPassword").value;
-
-  if (enteredOtp !== generatedOTP) {
-    alert("❌ Invalid OTP! Please enter the exact 6-digit code sent to your Gmail.");
-    return;
-  }
-
   try {
     const userCred = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(userCred.user, { displayName: name });
-    alert("✅ Account verified & created! Welcome to Nawab Digital Store.");
+    document.getElementById("registerForm").reset();
+    alert("✅ Account created! Welcome to Nawab Digital Store.");
     closeModal("authModal");
   } catch (err) {
     alert("Error: " + err.message);
   }
 });
 
-// 5. Login User
+// 4. Login User
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const email = document.getElementById("loginEmail").value.trim();
@@ -131,6 +92,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
+    document.getElementById("loginForm").reset();
     alert("✅ Logged in successfully!");
     closeModal("authModal");
   } catch (err) {
@@ -138,7 +100,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   }
 });
 
-// 6. Load Products Real-Time from Firebase
+// 5. Load Products Real-Time from Firebase
 const qProducts = query(collection(db, "products"), orderBy("createdAt", "desc"));
 onSnapshot(qProducts, (snapshot) => {
   allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -173,7 +135,7 @@ function renderProducts(productsList) {
   }).join("");
 }
 
-// 7. Category Filter & Search
+// 6. Category Filter & Search
 document.querySelectorAll(".cat-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
@@ -192,7 +154,7 @@ document.getElementById("searchInput").addEventListener("input", (e) => {
   renderProducts(filtered);
 });
 
-// 8. Open Product Details Modal
+// 7. Open Product Details Modal
 window.openProductDetails = (id) => {
   const prod = allProducts.find(p => p.id === id);
   if (!prod) return;
@@ -215,7 +177,7 @@ window.openProductDetails = (id) => {
   document.getElementById("productModal").style.display = "block";
 };
 
-// 9. Submit Order to Firebase
+// 8. Submit Order to Firebase
 document.getElementById("orderForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   try {
@@ -247,11 +209,9 @@ window.openAuthModal = (type) => {
     document.getElementById("loginForm").style.display = "block";
     document.getElementById("registerForm").style.display = "none";
   } else {
-    document.getElementById("authTitle").innerText = "Create Account (Gmail OTP)";
+    document.getElementById("authTitle").innerText = "Create Account";
     document.getElementById("loginForm").style.display = "none";
     document.getElementById("registerForm").style.display = "block";
-    document.getElementById("step1Fields").style.display = "block";
-    document.getElementById("step2Otp").style.display = "none";
   }
 };
 
