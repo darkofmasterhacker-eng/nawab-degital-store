@@ -26,14 +26,20 @@ document.getElementById("unlockAdminBtn").addEventListener("click", () => {
 });
 
 // Switch Admin Tabs
-window.switchAdminTab = (tabId) => {
-  document.querySelectorAll(".admin-section").forEach(sec => sec.style.display = "none");
-  document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+window.switchAdminTab = (tabId, btnEl = null) => {
+  document.querySelectorAll(".admin-section").forEach((sec) => (sec.style.display = "none"));
+  document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"));
   document.getElementById(tabId).style.display = "block";
-  event.target.classList.add("active");
+
+  if (btnEl) {
+    btnEl.classList.add("active");
+  } else {
+    const matchingBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+    if (matchingBtn) matchingBtn.classList.add("active");
+  }
 };
 
-// Convert Local Image File to Compressed Base64 (No paid Firebase Storage needed!)
+// Convert Local Image File to Compressed Base64
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -52,7 +58,7 @@ function fileToBase64(file) {
         resolve(canvas.toDataURL("image/jpeg", 0.75));
       };
     };
-    reader.onerror = error => reject(error);
+    reader.onerror = (error) => reject(error);
   });
 }
 
@@ -61,9 +67,11 @@ let productsCache = [];
 function initAdminData() {
   // Load Products
   onSnapshot(query(collection(db, "products"), orderBy("createdAt", "desc")), (snap) => {
-    productsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    productsCache = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
     const tbody = document.getElementById("adminProductsList");
-    tbody.innerHTML = productsCache.map(p => `
+    tbody.innerHTML = productsCache
+      .map(
+        (p) => `
       <tr>
         <td><img src="${p.image}" alt="" /></td>
         <td>${p.name}</td>
@@ -75,22 +83,30 @@ function initAdminData() {
           <button class="btn-danger" onclick="deleteProduct('${p.id}')">Delete</button>
         </td>
       </tr>
-    `).join("");
+    `
+      )
+      .join("");
   });
 
-  // Load Orders
+  // Load Orders (Including User IP Address)
   onSnapshot(query(collection(db, "orders"), orderBy("createdAt", "desc")), (snap) => {
     const tbody = document.getElementById("adminOrdersList");
-    tbody.innerHTML = snap.docs.map(d => {
-      const o = d.data();
-      const date = o.createdAt ? o.createdAt.toDate().toLocaleString() : "Just now";
-      return `
+    if (snap.empty) {
+      tbody.innerHTML = `<tr><td colspan="9">No orders yet.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = snap.docs
+      .map((d) => {
+        const o = d.data();
+        const date = o.createdAt ? o.createdAt.toDate().toLocaleString() : "Just now";
+        return `
         <tr>
           <td>${date}</td>
           <td>${o.customerName}<br><small style="color:#9ca3af">${o.customerEmail}</small></td>
           <td>${o.whatsapp}</td>
           <td>${o.productName}</td>
           <td style="color:#00ff88;">Rs. ${o.price}</td>
+          <td style="color:#00ff88; font-family:monospace;">${o.customerIp || "Unknown IP"}</td>
           <td>${o.paymentInfo}</td>
           <td><strong>${o.status}</strong></td>
           <td>
@@ -99,25 +115,68 @@ function initAdminData() {
           </td>
         </tr>
       `;
-    }).join("");
+      })
+      .join("");
   });
 
-  // Load Visitor IPs & Users
+  // Load Visitor IPs, Date & Time + Total Count
   onSnapshot(query(collection(db, "visitors"), orderBy("timestamp", "desc")), (snap) => {
+    const total = snap.size;
+    const countEl = document.getElementById("visitorCount");
+    const titleEl = document.getElementById("visitorTotalTitle");
+    if (countEl) countEl.innerText = total;
+    if (titleEl) titleEl.innerText = total;
+
     const tbody = document.getElementById("adminVisitorsList");
-    tbody.innerHTML = snap.docs.map(d => {
-      const v = d.data();
-      const time = v.timestamp ? v.timestamp.toDate().toLocaleString() : "Just now";
-      return `
+    if (snap.empty) {
+      tbody.innerHTML = `<tr><td colspan="5">No visitor logs yet.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = snap.docs
+      .map((d) => {
+        const v = d.data();
+        const time = v.timestamp ? v.timestamp.toDate().toLocaleString() : "Just now";
+        return `
         <tr>
           <td>${time}</td>
-          <td style="color:#00ff88; font-family:monospace;">${v.ip}</td>
-          <td><strong>${v.userName}</strong></td>
-          <td>${v.city}, ${v.country}</td>
-          <td><small>${v.userAgent}</small></td>
+          <td style="color:#00ff88; font-family:monospace;">${v.ip || "Unknown IP"}</td>
+          <td><strong>${v.userName || "Guest Visitor"}</strong></td>
+          <td>${v.city || "Unknown"}, ${v.country || "Unknown"}</td>
+          <td><small>${v.userAgent || "-"}</small></td>
         </tr>
       `;
-    }).join("");
+      })
+      .join("");
+  });
+
+  // Load Registered Users (Name, Gmail, Real IP, Date & Time) + Total Count
+  onSnapshot(query(collection(db, "users"), orderBy("createdAt", "desc")), (snap) => {
+    const total = snap.size;
+    const countEl = document.getElementById("userCount");
+    const titleEl = document.getElementById("userTotalTitle");
+    if (countEl) countEl.innerText = total;
+    if (titleEl) titleEl.innerText = total;
+
+    const tbody = document.getElementById("adminUsersList");
+    if (snap.empty) {
+      tbody.innerHTML = `<tr><td colspan="5">No registered users yet.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = snap.docs
+      .map((d) => {
+        const u = d.data();
+        const date = u.createdAt ? u.createdAt.toDate().toLocaleString() : "Just now";
+        return `
+        <tr>
+          <td>${date}</td>
+          <td><strong>${u.name || "User"}</strong></td>
+          <td>${u.email || "-"}</td>
+          <td style="color:#00ff88; font-family:monospace;">${u.ip || "Unknown IP"}</td>
+          <td>${u.city || "Unknown"}, ${u.country || "Unknown"}</td>
+        </tr>
+      `;
+      })
+      .join("");
   });
 }
 
@@ -162,7 +221,7 @@ document.getElementById("productForm").addEventListener("submit", async (e) => {
 
 // Edit Product Populate
 window.editProduct = (id) => {
-  const prod = productsCache.find(p => p.id === id);
+  const prod = productsCache.find((p) => p.id === id);
   if (!prod) return;
 
   document.getElementById("editProductId").value = prod.id;
@@ -206,6 +265,6 @@ window.deleteOrder = async (id) => {
 document.getElementById("clearLogsBtn").addEventListener("click", async () => {
   if (confirm("Clear all visitor IP logs?")) {
     const snap = await getDocs(collection(db, "visitors"));
-    snap.forEach(d => deleteDoc(doc(db, "visitors", d.id)));
+    snap.forEach((d) => deleteDoc(doc(db, "visitors", d.id)));
   }
 });
