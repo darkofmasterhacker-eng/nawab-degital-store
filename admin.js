@@ -17,13 +17,36 @@ import {
   getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+const ADMIN_EMAIL = "nawabzadahacker0@gmail.com".toLowerCase();
+
 let selectedAdminCategory = "All";
 let productsCache = [];
 let isInitialized = false;
 
+function showLockScreen(message = "") {
+  document.getElementById("adminDashboard").style.display = "none";
+  document.getElementById("adminLockScreen").style.display = "flex";
+  const errEl = document.getElementById("pinError");
+  if (errEl && message) {
+    errEl.innerText = message;
+  }
+}
+
+function showAdminDashboard() {
+  document.getElementById("adminLockScreen").style.display = "none";
+  document.getElementById("adminDashboard").style.display = "block";
+  const errEl = document.getElementById("pinError");
+  if (errEl) errEl.innerText = "";
+
+  if (!isInitialized) {
+    isInitialized = true;
+    initAdminData();
+  }
+}
+
 document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  const email = document.getElementById("adminEmailInput").value.trim();
+  const email = document.getElementById("adminEmailInput").value.trim().toLowerCase();
   const password = document.getElementById("adminPasswordInput").value;
   const errEl = document.getElementById("pinError");
   const btn = document.getElementById("unlockAdminBtn");
@@ -33,6 +56,9 @@ document.getElementById("adminLoginForm").addEventListener("submit", async (e) =
   btn.innerText = "Signing in...";
 
   try {
+    if (ADMIN_EMAIL !== "your_admin_gmail@gmail.com" && email !== ADMIN_EMAIL) {
+      throw new Error("This Gmail is not authorized for Admin Panel.");
+    }
     await signInWithEmailAndPassword(auth, email, password);
   } catch (err) {
     errEl.innerText = "❌ Login Failed: " + err.message;
@@ -42,22 +68,26 @@ document.getElementById("adminLoginForm").addEventListener("submit", async (e) =
   }
 });
 
+// Logout Button
 document.getElementById("adminLogoutBtn").addEventListener("click", async () => {
   await signOut(auth);
+  showLockScreen("Logged out successfully.");
 });
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    document.getElementById("adminLockScreen").style.display = "none";
-    document.getElementById("adminDashboard").style.display = "block";
-    if (!isInitialized) {
-      isInitialized = true;
-      initAdminData();
-    }
-  } else {
-    document.getElementById("adminDashboard").style.display = "none";
-    document.getElementById("adminLockScreen").style.display = "flex";
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    showLockScreen();
+    return;
   }
+
+  const userEmail = (user.email || "").toLowerCase();
+  if (ADMIN_EMAIL !== "your_admin_gmail@gmail.com" && userEmail !== ADMIN_EMAIL) {
+    await signOut(auth);
+    showLockScreen("❌ Normal user account cannot access Admin Panel. Please login with Admin Gmail.");
+    return;
+  }
+
+  showAdminDashboard();
 });
 
 window.switchAdminTab = (tabId, btnEl = null) => {
