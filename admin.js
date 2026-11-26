@@ -12,6 +12,9 @@ import {
   getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+let selectedAdminCategory = "All";
+let productsCache = [];
+
 document.getElementById("unlockAdminBtn").addEventListener("click", () => {
   const pin = document.getElementById("adminPinInput").value;
   if (pin === ADMIN_SECRET_PIN) {
@@ -36,6 +39,63 @@ window.switchAdminTab = (tabId, btnEl = null) => {
   }
 };
 
+window.selectAdminCategory = (category, btnEl = null) => {
+  selectedAdminCategory = category;
+
+  document.querySelectorAll("#adminCategoryBar .cat-btn").forEach((b) => b.classList.remove("active"));
+  if (btnEl) {
+    btnEl.classList.add("active");
+  } else {
+    const targetBtn = document.querySelector(`#adminCategoryBar .cat-btn[data-admin-cat="${category}"]`);
+    if (targetBtn) targetBtn.classList.add("active");
+  }
+
+  const badgeEl = document.getElementById("activeCategoryBadge");
+  const titleEl = document.getElementById("tableCategoryTitle");
+  const selectEl = document.getElementById("prodCategory");
+
+  if (badgeEl) badgeEl.innerText = category === "All" ? "All Products" : category;
+  if (titleEl) titleEl.innerText = category === "All" ? "All Categories" : category;
+  if (selectEl && category !== "All") {
+    selectEl.value = category;
+  }
+
+  renderAdminProducts();
+};
+
+function renderAdminProducts() {
+  const tbody = document.getElementById("adminProductsList");
+  if (!tbody) return;
+
+  const filtered =
+    selectedAdminCategory === "All"
+      ? productsCache
+      : productsCache.filter((p) => p.category === selectedAdminCategory);
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6">No products in ${selectedAdminCategory === "All" ? "this store" : selectedAdminCategory} yet.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered
+    .map(
+      (p) => `
+    <tr>
+      <td><img src="${p.image}" alt="" /></td>
+      <td>${p.name}</td>
+      <td>${p.category}</td>
+      <td>Rs. ${p.realPrice}</td>
+      <td style="color:#00ff88; font-weight:bold;">Rs. ${p.discountPrice}</td>
+      <td>
+        <button class="btn-outline" onclick="editProduct('${p.id}')">Edit</button>
+        <button class="btn-danger" onclick="deleteProduct('${p.id}')">Delete</button>
+      </td>
+    </tr>
+  `
+    )
+    .join("");
+}
+
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -58,29 +118,10 @@ function fileToBase64(file) {
   });
 }
 
-let productsCache = [];
-
 function initAdminData() {
   onSnapshot(query(collection(db, "products"), orderBy("createdAt", "desc")), (snap) => {
     productsCache = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-    const tbody = document.getElementById("adminProductsList");
-    tbody.innerHTML = productsCache
-      .map(
-        (p) => `
-      <tr>
-        <td><img src="${p.image}" alt="" /></td>
-        <td>${p.name}</td>
-        <td>${p.category}</td>
-        <td>Rs. ${p.realPrice}</td>
-        <td style="color:#00ff88; font-weight:bold;">Rs. ${p.discountPrice}</td>
-        <td>
-          <button class="btn-outline" onclick="editProduct('${p.id}')">Edit</button>
-          <button class="btn-danger" onclick="deleteProduct('${p.id}')">Delete</button>
-        </td>
-      </tr>
-    `
-      )
-      .join("");
+    renderAdminProducts();
   });
 
   onSnapshot(query(collection(db, "orders"), orderBy("createdAt", "desc")), (snap) => {
@@ -142,34 +183,44 @@ function initAdminData() {
       .join("");
   });
 
-  onSnapshot(query(collection(db, "users"), orderBy("createdAt", "desc")), (snap) => {
-    const total = snap.size;
-    const countEl = document.getElementById("userCount");
-    const titleEl = document.getElementById("userTotalTitle");
-    if (countEl) countEl.innerText = total;
-    if (titleEl) titleEl.innerText = total;
+  onSnapshot(
+    query(collection(db, "users"), orderBy("createdAt", "desc")),
+    (snap) => {
+      const total = snap.size;
+      const countEl = document.getElementById("userCount");
+      const titleEl = document.getElementById("userTotalTitle");
+      if (countEl) countEl.innerText = total;
+      if (titleEl) titleEl.innerText = total;
 
-    const tbody = document.getElementById("adminUsersList");
-    if (snap.empty) {
-      tbody.innerHTML = `<tr><td colspan="5">No registered users yet.</td></tr>`;
-      return;
+      const tbody = document.getElementById("adminUsersList");
+      if (snap.empty) {
+        tbody.innerHTML = `<tr><td colspan="5">No registered users yet.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = snap.docs
+        .map((d) => {
+          const u = d.data();
+          const date = u.createdAt ? u.createdAt.toDate().toLocaleString() : "Just now";
+          return `
+          <tr>
+            <td>${date}</td>
+            <td><strong>${u.name || "User"}</strong></td>
+            <td>${u.email || "-"}</td>
+            <td style="color:#00ff88; font-family:monospace;">${u.ip || "Unknown IP"}</td>
+            <td>${u.city || "Unknown"}, ${u.country || "Unknown"}</td>
+          </tr>
+        `;
+        })
+        .join("");
+    },
+    (err) => {
+      console.error("Users listener error:", err);
+      const tbody = document.getElementById("adminUsersList");
+      if (tbody) {
+        tbody.innerHTML = `<tr><td colspan="5">Check Firestore Rules for 'users' collection.</td></tr>`;
+      }
     }
-    tbody.innerHTML = snap.docs
-      .map((d) => {
-        const u = d.data();
-        const date = u.createdAt ? u.createdAt.toDate().toLocaleString() : "Just now";
-        return `
-        <tr>
-          <td>${date}</td>
-          <td><strong>${u.name || "User"}</strong></td>
-          <td>${u.email || "-"}</td>
-          <td style="color:#00ff88; font-family:monospace;">${u.ip || "Unknown IP"}</td>
-          <td>${u.city || "Unknown"}, ${u.country || "Unknown"}</td>
-        </tr>
-      `;
-      })
-      .join("");
-  });
+  );
 }
 
 document.getElementById("productForm").addEventListener("submit", async (e) => {
@@ -182,9 +233,11 @@ document.getElementById("productForm").addEventListener("submit", async (e) => {
     imageUrl = await fileToBase64(fileInput);
   }
 
+  const chosenCategory = document.getElementById("prodCategory").value;
+
   const productData = {
     name: document.getElementById("prodName").value.trim(),
-    category: document.getElementById("prodCategory").value,
+    category: chosenCategory,
     realPrice: Number(document.getElementById("prodRealPrice").value),
     discountPrice: Number(document.getElementById("prodDiscountPrice").value),
     description: document.getElementById("prodDesc").value.trim(),
@@ -202,7 +255,7 @@ document.getElementById("productForm").addEventListener("submit", async (e) => {
       }
       productData.createdAt = serverTimestamp();
       await addDoc(collection(db, "products"), productData);
-      alert("✅ New Product Uploaded to Store!");
+      alert(`✅ Added to ${chosenCategory}!`);
     }
     resetProductForm();
   } catch (err) {
@@ -213,6 +266,10 @@ document.getElementById("productForm").addEventListener("submit", async (e) => {
 window.editProduct = (id) => {
   const prod = productsCache.find((p) => p.id === id);
   if (!prod) return;
+
+  if (selectedAdminCategory !== "All" && selectedAdminCategory !== prod.category) {
+    window.selectAdminCategory("All");
+  }
 
   document.getElementById("editProductId").value = prod.id;
   document.getElementById("prodName").value = prod.name;
@@ -231,6 +288,9 @@ window.editProduct = (id) => {
 window.resetProductForm = () => {
   document.getElementById("productForm").reset();
   document.getElementById("editProductId").value = "";
+  if (selectedAdminCategory !== "All") {
+    document.getElementById("prodCategory").value = selectedAdminCategory;
+  }
   document.getElementById("formHeading").innerText = "Add New Product";
   document.getElementById("saveProdBtn").innerText = "Upload Product";
   document.getElementById("cancelEditBtn").style.display = "none";
