@@ -1,4 +1,9 @@
-import { db, ADMIN_SECRET_PIN } from "./firebase-config.js";
+import { auth, db } from "./firebase-config.js";
+import {
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
   collection,
   addDoc,
@@ -14,15 +19,44 @@ import {
 
 let selectedAdminCategory = "All";
 let productsCache = [];
+let isInitialized = false;
 
-document.getElementById("unlockAdminBtn").addEventListener("click", () => {
-  const pin = document.getElementById("adminPinInput").value;
-  if (pin === ADMIN_SECRET_PIN) {
+document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("adminEmailInput").value.trim();
+  const password = document.getElementById("adminPasswordInput").value;
+  const errEl = document.getElementById("pinError");
+  const btn = document.getElementById("unlockAdminBtn");
+
+  errEl.innerText = "";
+  btn.disabled = true;
+  btn.innerText = "Signing in...";
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    errEl.innerText = "❌ Login Failed: " + err.message;
+  } finally {
+    btn.disabled = false;
+    btn.innerText = "Login to Admin Panel";
+  }
+});
+
+document.getElementById("adminLogoutBtn").addEventListener("click", async () => {
+  await signOut(auth);
+});
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
     document.getElementById("adminLockScreen").style.display = "none";
     document.getElementById("adminDashboard").style.display = "block";
-    initAdminData();
+    if (!isInitialized) {
+      isInitialized = true;
+      initAdminData();
+    }
   } else {
-    document.getElementById("pinError").innerText = "❌ Access Denied! Wrong Security PIN.";
+    document.getElementById("adminDashboard").style.display = "none";
+    document.getElementById("adminLockScreen").style.display = "flex";
   }
 });
 
