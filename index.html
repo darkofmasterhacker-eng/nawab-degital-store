@@ -3,180 +3,157 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex, nofollow" />
-  <title>Admin Control  Nawab Digital Store</title>
+
+  <title>Nawab Digital Store | Premium Digital Products & Categories</title>
+  <meta name="description" content="Nawab Digital Store official home page. Browse all categories, digital products, scripts, software tools, and courses. Developed by Nawab Zada Hacker." />
+  <meta name="keywords" content="Nawab Digital Store, Digital Products, Web Scripts, Software Tools, Courses, Nawab Zada Hacker" />
+  <meta name="author" content="Nawab Zada Hacker" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://nawab-digital-store.vercel.app/index.html" />
+
+  <meta property="og:title" content="Nawab Digital Store — Home" />
+  <meta property="og:description" content="Explore all products and categories at Nawab Digital Store." />
+  <meta property="og:type" content="website" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "name": "Nawab Digital Store",
+    "description": "Premium Digital Products, Scripts, and Tech Courses Store",
+    "telephone": "+966597353083",
+    "founder": {
+      "@type": "Person",
+      "name": "Nawab Zada Hacker"
+    }
+  }
+  </script>
+
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
-<body>
+<body data-page="home">
 
-  <div id="adminLockScreen" class="lock-screen">
-    <div class="lock-box">
-      <h2><i class="fas fa-user-secret"></i> Restricted Access</h2>
-      <p>Enter Admin Security Key</p>
-      <input type="password" id="adminPinInput" placeholder="Enter Secret PIN..." />
-      <button id="unlockAdminBtn" class="btn-primary full-width">Access Panel</button>
-      <p id="pinError" class="error-text"></p>
+  <header class="navbar">
+    <div class="container nav-flex">
+      <a href="index.html" class="logo">NAWAB <span>DIGITAL STORE</span></a>
+      <nav class="nav-links">
+        <a href="index.html" class="active">Home</a>
+        <a href="products.html">Products</a>
+        <a href="categories.html">Categories</a>
+        <a href="blogs.html">Blogs</a>
+        <a href="about.html">About</a>
+        <a href="profile.html">Profile</a>
+      </nav>
+      <div class="auth-buttons" id="authArea">
+        <button class="btn-outline" onclick="openAuthModal('login')">Login</button>
+        <button class="btn-primary" onclick="openAuthModal('register')">Sign Up</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <span class="badge">🔥 Trusted Digital Marketplace</span>
+      <h1>Upgrade Your Digital Arsenal with <span>Nawab Digital Store</span></h1>
+      <p>Premium Web Scripts, Hacking Tools,Mobile&Computer Hack (<strong>Software.</strong>).</p>
+      <div class="hero-btns">
+        <a href="products.html" class="btn-primary">All Products</a>
+        <a href="categories.html" class="btn-outline">All Categories</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="categories" class="section container">
+    <div class="section-header">
+      <h2 class="section-title">All <span>Categories</span></h2>
+      <a href="categories.html" class="btn-outline">Open Categories Page &rarr;</a>
+    </div>
+    <div class="category-bar" id="categoryBar">
+      <button class="cat-btn active" data-cat="All">All Products</button>
+      <button class="cat-btn" data-cat="Software & Tools">Software & Tools</button>
+      <button class="cat-btn" data-cat="Web Scripts">Web Scripts</button>
+      <button class="cat-btn" data-cat="Courses">Courses</button>
+      <button class="cat-btn" data-cat="Accounts & Keys">Accounts & Keys</button>
+    </div>
+  </section>
+
+  <section id="products" class="section container">
+    <div class="section-header">
+      <h2 class="section-title">All <span>Products</span></h2>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <input type="text" id="searchInput" placeholder="Search products..." class="search-box" />
+        <a href="products.html" class="btn-outline">Full Products Page &rarr;</a>
+      </div>
+    </div>
+    <div class="products-grid" id="productsGrid">
+      <p class="loading-text">Loading store items...</p>
+    </div>
+  </section>
+
+  <div id="productModal" class="modal">
+    <div class="modal-content large-modal">
+      <span class="close-btn" onclick="closeModal('productModal')">&times;</span>
+      <div class="modal-product-grid">
+        <img id="modalImg" src="" alt="Product Image" />
+        <div class="modal-info">
+          <span id="modalCategory" class="badge">Category</span>
+          <h2 id="modalTitle">Product Title</h2>
+          <div class="price-box">
+            <span id="modalDiscountPrice" class="new-price">Rs. 0</span>
+            <span id="modalRealPrice" class="old-price">Rs. 0</span>
+          </div>
+          <p class="wa-contact-line">
+            <i class="fab fa-whatsapp"></i> WhatsApp: <strong>+966 59 735 3083</strong>
+            <a id="modalWaLink" href="https://wa.me/966597353083" target="_blank" rel="noopener" class="btn-wa-sm">Chat on WhatsApp</a>
+          </p>
+          <p id="modalDesc" class="full-desc"></p>
+
+          <hr class="divider" />
+          <h3>Place Your Order</h3>
+          <form id="orderForm">
+            <input type="hidden" id="orderProductId" />
+            <input type="hidden" id="orderProductName" />
+            <input type="hidden" id="orderProductPrice" />
+            <input type="text" id="custName" placeholder="Your Full Name" required />
+            <input type="text" id="custWhatsApp" placeholder="WhatsApp Number (e.g. 03001234567)" required />
+            <input type="text" id="custPaymentNote" placeholder="Payment Method / Transaction ID (JazzCash/EasyPaisa/Bank)" required />
+            <button type="submit" class="btn-primary full-width">Confirm Order Now</button>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div id="adminDashboard" style="display:none;">
-    <header class="navbar">
-      <div class="container nav-flex">
-        <a href="index.html" class="logo">NAWAB <span>ADMIN PANEL</span></a>
-        <div class="admin-tabs">
-          <button class="tab-btn active" data-tab="productsTab" onclick="switchAdminTab('productsTab', this)">📦 Products</button>
-          <button class="tab-btn" data-tab="ordersTab" onclick="switchAdminTab('ordersTab', this)">🛒 Orders</button>
-          <button class="tab-btn" data-tab="visitorsTab" onclick="switchAdminTab('visitorsTab', this)">🌐 Visitors (<span id="visitorCount">0</span>)</button>
-          <button class="tab-btn" data-tab="usersTab" onclick="switchAdminTab('usersTab', this)">👤 Registered Users (<span id="userCount">0</span>)</button>
-          <a href="index.html" class="btn-outline">View Store</a>
-        </div>
-      </div>
-    </header>
+  <div id="authModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('authModal')">&times;</span>
+      <h2 id="authTitle">Login to Store</h2>
 
-    <main class="container section">
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Enter your Gmail" required />
+        <input type="password" id="loginPassword" placeholder="Enter Password" required />
+        <button type="submit" class="btn-primary full-width">Login</button>
+        <p class="switch-text">Don't have an account? <a href="#" onclick="openAuthModal('register')">Create Account</a></p>
+      </form>
 
-      <div id="productsTab" class="admin-section">
-
-        <div class="admin-card" style="padding:18px; margin-bottom:20px;">
-          <div class="section-header" style="margin-bottom:12px;">
-            <h3 style="color:var(--primary); margin:0;">Select Category Workspace</h3>
-            <span id="activeCategoryBadge" class="badge">All Products</span>
-          </div>
-          <div class="category-bar" id="adminCategoryBar">
-            <button type="button" class="cat-btn active" data-admin-cat="All" onclick="selectAdminCategory('All', this)">All Categories</button>
-            <button type="button" class="cat-btn" data-admin-cat="Software & Tools" onclick="selectAdminCategory('Software & Tools', this)">Software & Tools</button>
-            <button type="button" class="cat-btn" data-admin-cat="Web Scripts" onclick="selectAdminCategory('Web Scripts', this)">Web Scripts</button>
-            <button type="button" class="cat-btn" data-admin-cat="Courses" onclick="selectAdminCategory('Courses', this)">Courses</button>
-            <button type="button" class="cat-btn" data-admin-cat="Accounts & Keys" onclick="selectAdminCategory('Accounts & Keys', this)">Accounts & Keys</button>
-          </div>
-        </div>
-
-        <div class="admin-card">
-          <h2 id="formHeading">Add New Product</h2>
-          <form id="productForm" class="admin-form">
-            <input type="hidden" id="editProductId" />
-
-            <div class="form-row">
-              <input type="text" id="prodName" placeholder="Product Name" required />
-              <select id="prodCategory" required>
-                <option value="Software & Tools">Software & Tools</option>
-                <option value="Web Scripts">Web Scripts</option>
-                <option value="Courses">Courses</option>
-                <option value="Accounts & Keys">Accounts & Keys</option>
-              </select>
-            </div>
-
-            <div class="form-row">
-              <input type="number" id="prodRealPrice" placeholder="Real Price (e.g. 5000)" required />
-              <input type="number" id="prodDiscountPrice" placeholder="Discount Offer Price (e.g. 1999)" required />
-            </div>
-
-            <div class="form-row">
-              <input type="file" id="prodImageFile" accept="image/*" />
-              <input type="url" id="prodImageUrl" placeholder="OR Paste Image URL directly" />
-            </div>
-
-            <textarea id="prodDesc" rows="4" placeholder="Complete Product Description & Features..." required></textarea>
-
-            <div class="form-actions">
-              <button type="submit" class="btn-primary" id="saveProdBtn">Upload Product</button>
-              <button type="button" class="btn-outline" id="cancelEditBtn" style="display:none;" onclick="resetProductForm()">Cancel Edit</button>
-            </div>
-          </form>
-        </div>
-
-        <h2 class="section-title">Uploaded Products — <span id="tableCategoryTitle">All Categories</span></h2>
-        <div class="table-responsive">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Real Price</th>
-                <th>Offer Price</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="adminProductsList"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div id="ordersTab" class="admin-section" style="display:none;">
-        <h2 class="section-title">Customer <span>Orders</span></h2>
-        <div class="table-responsive">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Date & Time</th>
-                <th>Customer Name</th>
-                <th>WhatsApp</th>
-                <th>Product</th>
-                <th>Price</th>
-                <th>IP Address</th>
-                <th>Payment Info</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="adminOrdersList"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div id="visitorsTab" class="admin-section" style="display:none;">
-        <div class="section-header">
-          <h2 class="section-title">Site <span>Visitors</span> (Total: <span id="visitorTotalTitle">0</span>)</h2>
-          <button class="btn-outline" id="clearLogsBtn">Clear Logs</button>
-        </div>
-        <div class="table-responsive">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Date & Time</th>
-                <th>Real IP Address</th>
-                <th>User / Guest</th>
-                <th>Location</th>
-                <th>Device / Browser</th>
-              </tr>
-            </thead>
-            <tbody id="adminVisitorsList"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div id="usersTab" class="admin-section" style="display:none;">
-        <div class="section-header">
-          <h2 class="section-title">Registered <span>Users</span> (Total: <span id="userTotalTitle">0</span>)</h2>
-        </div>
-        <div class="table-responsive">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Date & Time</th>
-                <th>User Name</th>
-                <th>Gmail</th>
-                <th>Real IP Address</th>
-                <th>Location</th>
-              </tr>
-            </thead>
-            <tbody id="adminUsersList"></tbody>
-          </table>
-        </div>
-      </div>
-
-    </main>
-
-    <footer>
-      <div class="container footer-content">
-        <p>Nawab Digital Store Admin Control</p>
-        <p class="dev-credit">Developer: <span>Nawab Zada Hacker</span></p>
-      </div>
-    </footer>
+      <form id="registerForm" style="display:none;">
+        <input type="text" id="regName" placeholder="Full Name" required />
+        <input type="email" id="regEmail" placeholder="Enter Valid Gmail Address" required />
+        <input type="password" id="regPassword" placeholder="Create Password (min 6 chars)" required />
+        <button type="submit" class="btn-primary full-width">Create Account</button>
+        <p class="switch-text">Already have an account? <a href="#" onclick="openAuthModal('login')">Login</a></p>
+      </form>
+    </div>
   </div>
 
-  <script type="module" src="admin.js"></script>
+  <footer>
+    <div class="container footer-content">
+      <p>&copy; 2026 <strong>Nawab Digital Store</strong>. All Rights <strong>Reserved.</strong></p>
+      <p class="dev-credit">Developed by <span>Nawab Zada Hacker</span></p>
+    </div>
+  </footer>
+
+  <script type="module" src="app.js"></script>
 </body>
 </html>
