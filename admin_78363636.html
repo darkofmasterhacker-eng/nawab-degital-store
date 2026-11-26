@@ -12,10 +12,13 @@
 
   <div id="adminLockScreen" class="lock-screen">
     <div class="lock-box">
-      <h2><i class="fas fa-user-secret"></i> Restricted Access</h2>
-      <p>Enter Admin Security Key</p>
-      <input type="password" id="adminPinInput" placeholder="Enter Secret PIN..." />
-      <button id="unlockAdminBtn" class="btn-primary full-width">Access Panel</button>
+      <h2><i class="fas fa-user-secret"></i> Admin Login</h2>
+      <p>Sign in with your Firebase Admin Gmail & Password</p>
+      <form id="adminLoginForm">
+        <input type="email" id="adminEmailInput" placeholder="Enter Admin Gmail..." required />
+        <input type="password" id="adminPasswordInput" placeholder="Enter Password..." required />
+        <button type="submit" id="unlockAdminBtn" class="btn-primary full-width">Login to Admin Panel</button>
+      </form>
       <p id="pinError" class="error-text"></p>
     </div>
   </div>
@@ -30,6 +33,7 @@
           <button class="tab-btn" data-tab="visitorsTab" onclick="switchAdminTab('visitorsTab', this)">🌐 Visitors (<span id="visitorCount">0</span>)</button>
           <button class="tab-btn" data-tab="usersTab" onclick="switchAdminTab('usersTab', this)">👤 Registered Users (<span id="userCount">0</span>)</button>
           <a href="index.html" class="btn-outline">View Store</a>
+          <button type="button" class="btn-danger" id="adminLogoutBtn">Logout</button>
         </div>
       </div>
     </header>
