@@ -4,24 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>Hidden Admin Control | Nawab Digital Store</title>
+  <title>Admin Control | Nawab Digital Store</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
 
-  <!-- Admin Security Gate -->
   <div id="adminLockScreen" class="lock-screen">
     <div class="lock-box">
       <h2><i class="fas fa-user-secret"></i> Restricted Access</h2>
-      <p>Enter Nawab Zada Admin Security Key</p>
+      <p>Enter Admin Security Key</p>
       <input type="password" id="adminPinInput" placeholder="Enter Secret PIN..." />
       <button id="unlockAdminBtn" class="btn-primary full-width">Access Panel</button>
       <p id="pinError" class="error-text"></p>
     </div>
   </div>
 
-  <!-- Main Admin Dashboard -->
   <div id="adminDashboard" style="display:none;">
     <header class="navbar">
       <div class="container nav-flex">
@@ -38,8 +36,22 @@
 
     <main class="container section">
 
-      <!-- TAB 1: PRODUCTS MANAGEMENT -->
       <div id="productsTab" class="admin-section">
+
+        <div class="admin-card" style="padding:18px; margin-bottom:20px;">
+          <div class="section-header" style="margin-bottom:12px;">
+            <h3 style="color:var(--primary); margin:0;">Select Category Workspace</h3>
+            <span id="activeCategoryBadge" class="badge">All Products</span>
+          </div>
+          <div class="category-bar" id="adminCategoryBar">
+            <button type="button" class="cat-btn active" data-admin-cat="All" onclick="selectAdminCategory('All', this)">All Categories</button>
+            <button type="button" class="cat-btn" data-admin-cat="Software & Tools" onclick="selectAdminCategory('Software & Tools', this)">Software & Tools</button>
+            <button type="button" class="cat-btn" data-admin-cat="Web Scripts" onclick="selectAdminCategory('Web Scripts', this)">Web Scripts</button>
+            <button type="button" class="cat-btn" data-admin-cat="Courses" onclick="selectAdminCategory('Courses', this)">Courses</button>
+            <button type="button" class="cat-btn" data-admin-cat="Accounts & Keys" onclick="selectAdminCategory('Accounts & Keys', this)">Accounts & Keys</button>
+          </div>
+        </div>
+
         <div class="admin-card">
           <h2 id="formHeading">Add New Product</h2>
           <form id="productForm" class="admin-form">
@@ -74,7 +86,7 @@
           </form>
         </div>
 
-        <h2 class="section-title">Manage Uploaded Products</h2>
+        <h2 class="section-title">Uploaded Products — <span id="tableCategoryTitle">All Categories</span></h2>
         <div class="table-responsive">
           <table class="admin-table">
             <thead>
@@ -92,7 +104,6 @@
         </div>
       </div>
 
-      <!-- TAB 2: ORDERS MANAGEMENT (WITH USER IP ADDRESS) -->
       <div id="ordersTab" class="admin-section" style="display:none;">
         <h2 class="section-title">Customer <span>Orders</span></h2>
         <div class="table-responsive">
@@ -115,7 +126,6 @@
         </div>
       </div>
 
-      <!-- TAB 3: VISITORS IP, DATE & TIME LOGS -->
       <div id="visitorsTab" class="admin-section" style="display:none;">
         <div class="section-header">
           <h2 class="section-title">Site <span>Visitors</span> (Total: <span id="visitorTotalTitle">0</span>)</h2>
@@ -137,7 +147,6 @@
         </div>
       </div>
 
-      <!-- TAB 4: REGISTERED USERS (NAME, GMAIL, REAL IP, DATE & TIME) -->
       <div id="usersTab" class="admin-section" style="display:none;">
         <div class="section-header">
           <h2 class="section-title">Registered <span>Users</span> (Total: <span id="userTotalTitle">0</span>)</h2>
